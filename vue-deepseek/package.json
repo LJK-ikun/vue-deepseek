@@ -13,6 +13,7 @@
     "axios": "^1.12.2",
     "element-plus": "^2.11.4",
     "markdown-it": "^14.1.0",
+    "openai": "^6.1.0",
     "vue": "^3.5.21",
     "vue-router": "^4.5.1",
     "vue3-markdown-it": "^1.0.10"
@@ -20,6 +21,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/tsconfig": "^0.8.1",
+    "sass-embedded": "^1.93.2",
     "typescript": "~5.8.3",
     "vite": "^7.1.7",
     "vue-tsc": "^3.0.7"

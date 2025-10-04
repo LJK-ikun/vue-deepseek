@@ -40,8 +40,10 @@
 </template>
 
 <script setup lang="ts">
+// 临时忽略 TS 类型检查：vue3-markdown-it 没有官方类型声明，先抑制报错保证编译通过
+// @ts-ignore
 import Markdown from 'vue3-markdown-it'
-import { nextTick } from 'vue'
+import { nextTick, watch } from 'vue'
 
 //接受父组件传递过来的数据
 const props = defineProps({
@@ -62,6 +64,17 @@ const scrollToBottom = async() => {
         }
     })
 }
+
+//将这个方法暴露出去，以便在父组件或其他地方使用
+defineExpose({
+    scrollToBottom
+})
+
+//监听数组变化,数组发生变化时滚动到底部，调用scrolltoBottom方法，滚动到底部
+watch(() => props.message, () => {
+    scrollToBottom()
+},{deep:true})
+
 </script>
 
 <style lang="scss" scoped>
@@ -83,7 +96,7 @@ const scrollToBottom = async() => {
 }
 
 .message-item{
-    display: gird;
+    display: grid;
     column-gap: 8px;
 }
 
@@ -141,7 +154,7 @@ const scrollToBottom = async() => {
 :deep(p){
     margin: 0.5rem 0;
 }
-:deeo(pre){
+:deep(pre){
     margin: 0.5rem 0;
     font-size: 0.8125rem;
     max-width: 100%;

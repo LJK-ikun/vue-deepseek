@@ -33,10 +33,62 @@
                 <!-- 左边内容 end -->
 
                 <!-- 右边内容 start -->
+                <div class="right-container">
+                    <div class="message-area">
+                        <MessageComp :message="queryInfos.message" ref="messageRef" :loading="loading"></MessageComp>
 
+                    </div>
+                    <div class="input-area">
+                        <el-input v-model="queryKeys" id="keyInput" placeholder="请输入内容"  @keyup.enter.native="(e)=>{
+                            if(e.isComposing || loading) return;
+                            handleRequest();
+                        }" show-word-limit/>
+
+                        <el-button style="height: 40px;" type="primary" class="send-btn" :loading="loading" :disable="!querykeys" @click="handleRequest">
+                            <el-icon><Promotion/></el-icon>
+                        </el-button>
+                    </div>
+                </div>
                 <!-- 右边内容 end -->
              </div>
             <!-- 详细内容 end -->
         </div>
     </div>
 </template>
+
+<script setup lang="ts">
+import MessageComp from './components/MessageComp.vue'
+import { Plus, Promotion, EditPen, Delete, Brush} from '@element-plus/icons-vue'
+import { ref,watch,onMounted,nextTick } from 'vue'
+import OpenAI from 'openai'
+import { ElMessage,ElMessageBox } from 'element-plus'
+import { MODEL_CONFIG,STORAGE_KEY } from '@/config/deepseek.ts'
+
+// 定义对话的类型
+interface SessionItem{
+    title: string;
+    crtTime: Date;
+    messages: any[];
+}
+
+// 响应数据
+const sessionList = ref<SessionItem[]>([])
+// 激活索引
+const activeIndex = ref<number>(-1);
+// 编辑索引
+const editIndex = ref<number>(-1);
+//查询关键词
+const queryKeys = ref<string>('');
+// openAi对象
+const openai = ref<OpenAI | null>(null);
+// 按钮加载状态
+const loading = ref<boolean>(false);
+//消息内容
+const messageRef = ref<InstanceType<typeof MessageComp> | null>(null);
+//参数对象
+const queryInfos = ref({
+    message:[] as any[],
+    model: 'deepseek-r1',
+    ...MODEL_CONFIG
+})
+</script>
